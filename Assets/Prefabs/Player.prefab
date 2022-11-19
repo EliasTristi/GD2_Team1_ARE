@@ -348,6 +348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraPivot: {fileID: 0}
+  _model: {fileID: 816820508427114352}
   _runningSpeed: 5
   _jumpHeight: 3
   _globalGravity: 20

@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Transform _cameraPivot;
+    [SerializeField] private Transform _model;
 
     [SerializeField] private float _runningSpeed = 10;
     [SerializeField] private float _jumpHeight = 3f;
@@ -53,12 +54,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        _inputVector.x = Input.GetAxis("Horizontal");
-
-        if ( Input.GetButtonDown("Jump"))
-        {
-            _jump = true;
-        }
+        RegisterInput();
+        RotateModel();
     }
 
     private void FixedUpdate()
@@ -77,10 +74,26 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void RegisterInput()
+    {
+        _inputVector.x = Input.GetAxis("Horizontal");
+
+        if (Input.GetButtonDown("Jump"))
+            _jump = true;
+    }
+    private void RotateModel()
+    {
+        float rotation = 0;
+        if (_inputVector.x < 0) rotation += 90;
+        else if (_inputVector.x > 0) rotation -= 90;
+
+        _model.rotation = _cameraPivot.rotation * Quaternion.Euler(0, rotation, 0);
+    }
+
     private void ApplyMovement()
     {
         // Move relative to camera rotation
-        Vector3 horizontalMovement = _cameraPivot.transform.rotation * _inputVector * _runningSpeed;
+        Vector3 horizontalMovement = _cameraPivot.rotation * _inputVector * _runningSpeed;
 
         _velocity.x = horizontalMovement.x;
         _velocity.z = horizontalMovement.z;
