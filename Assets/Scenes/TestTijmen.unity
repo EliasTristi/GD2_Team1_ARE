@@ -405,7 +405,7 @@ PrefabInstance:
     - target: {fileID: 8238437210015961024, guid: 03743a301f4beee4e8a0576edc1fcae2, type: 3}
       propertyPath: _cameraPivot
       value: 
-      objectReference: {fileID: 1555861614}
+      objectReference: {fileID: 949445866}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03743a301f4beee4e8a0576edc1fcae2, type: 3}
 --- !u!4 &904581937 stripped
@@ -511,7 +511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerPos: {fileID: 1555861613}
-  _rotationSpeed: 10
+  _rotationSpeed: 80
 --- !u!1001 &1345823107
 PrefabInstance:
   m_ObjectHideFlags: 0
