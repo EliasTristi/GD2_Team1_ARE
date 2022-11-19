@@ -8,47 +8,64 @@ public class CameraBehaviour : MonoBehaviour
     [SerializeField]
     private GameObject _playerPos;
     [SerializeField]
-    private float _rotationSpeed = 10.0f;
-    float timeCount = 0.0f;
+    private float _rotationSpeed = 40.0f;
 
     private Vector3 rotationPoint;
+    private bool _doRotation = false;
+    private Vector3 startDir;
+  
 
-    // Start is called before the first frame update
     void Start()
     {
-        //set rotation point
-      
         rotationPoint = gameObject.transform.position;
-        rotationPoint.z = _playerPos.transform.position.z;
-
-       // StartCoroutine(RotateTest());
+       // rotationPoint.z = _playerPos.transform.position.z;
+        startDir = rotationPoint - transform.position;
+       
     }
-
-    // Update is called once per frame
     void Update()
     {
-        // _targetRot = Quaternion.AngleAxis(90, transform.forward);
-
-        //transform.rotation = Quaternion.Lerp(transform.rotation, _targetRot, timeCount * _rotationSpeed);
-        //timeCount = timeCount + Time.deltaTime;
-
-        //To make it smooth and not stop -> timeCount * _rotationSpeed instead of 90
-        //I still need to find a way to combine these 2 properly
-        if (Input.GetButtonDown("RotateCameraLeft"))
+        if (!_doRotation)
         {
-            transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), 90);
+            if (Input.GetButtonDown("RotateCameraLeft"))
+            {
+                
+                rotationPoint = _playerPos.transform.position ;
+                //rotationPoint.z = _playerPos.transform.position.z;
+                startDir = rotationPoint - transform.position;
+                _doRotation = true;
+                if(_rotationSpeed < 0)
+                    _rotationSpeed *= -1;
+            }
+            else if (Input.GetButtonDown("RotateCameraRight"))
+            {
+                rotationPoint = _playerPos.transform.position;
+                //rotationPoint = transform.position;
+                //rotationPoint.z = _playerPos.transform.position.z;
+                startDir = rotationPoint - transform.position;
+                _doRotation = true;
+                if (_rotationSpeed > 0)
+                    _rotationSpeed *= -1;
+            }
+
         }
-        else if(Input.GetButtonDown("RotateCameraRight"))
-        {
-            transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), -90);
-        }
+
+        if (_doRotation)
+            Rotate();
+
     }
 
-
-
-    //IEnumerator RotateTest()
-    //{
-
-    //}
-
+    void Rotate()
+    {
+        Vector3 targetDir = rotationPoint - transform.position;
+        float currentAngle = Vector3.Angle(targetDir, startDir);
+  
+        if (currentAngle >= 90)
+        {
+            _doRotation = false;
+            startDir = targetDir;
+            return;
+        }
+        transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), _rotationSpeed * Time.deltaTime);
+    }
 }
+
