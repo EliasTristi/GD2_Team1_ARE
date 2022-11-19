@@ -19,8 +19,8 @@ public class MapCameraMovement : MonoBehaviour
     {
         _timer = Time.deltaTime;
 
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-
+        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), -Input.GetAxis("Horizontal"));
+        
         characterController.Move(move * Time.deltaTime * _speed);
     }
 }
