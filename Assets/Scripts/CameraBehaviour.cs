@@ -14,6 +14,8 @@ public class CameraBehaviour : MonoBehaviour
     private bool _doRotation = false;
     private Vector3 startDir;
   
+    [SerializeField]
+    private float _cameraFollowSpeed = 2.0f;
 
     void Start()
     {
@@ -66,6 +68,67 @@ public class CameraBehaviour : MonoBehaviour
             return;
         }
         transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), _rotationSpeed * Time.deltaTime);
+    }
+
+    private void FixedUpdate()
+    {
+        if(!_doRotation)
+        HandleMovement();
+    }
+
+    void HandleMovement() 
+    {
+        //source: https://www.youtube.com/watch?v=Gwc4VCGEuBM
+
+        float boundX = 2.0f;
+        float boundY = 2.0f;
+        float boundZ = 2.0f;
+
+        Vector3 moveDirection = Vector3.zero;
+
+        float dx = _playerPos.transform.position.x - transform.position.x;
+
+        if (dx > boundX || dx < -boundX)
+        {
+            //if (transform.position.x < _playerPos.transform.position.x)
+            //{
+            //    moveDirection.x = dx - boundX;
+            //}
+            //else
+            //{
+            //    moveDirection.x = dx + boundX;
+            //}
+
+        }
+
+
+
+        float dy = _playerPos.transform.position.y - transform.position.y;
+
+        if (dy > boundY || dy < -boundY)
+        {
+          
+
+
+
+        }
+
+        float dz = _playerPos.transform.position.z - transform.position.z;
+
+        if (dz > boundZ || dz < -boundZ) //check if outside of the boundary
+        {
+            print("OK");
+            if (transform.position.z < _playerPos.transform.position.z)
+            {
+                moveDirection.z = dz - boundZ;
+            }
+            else
+            {
+                moveDirection.z = dz + boundZ;
+            }
+        }
+
+        transform.position += moveDirection * Time.deltaTime * _cameraFollowSpeed;
     }
 }
 
