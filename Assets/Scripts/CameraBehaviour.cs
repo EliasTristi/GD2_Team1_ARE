@@ -19,6 +19,16 @@ public class CameraBehaviour : MonoBehaviour
 
     Camera _camera;
 
+    private float _screenCenterX = Screen.width / 2;
+    private float _screenCenterY = Screen.height / 2;
+
+    [SerializeField]
+    private float _followBoundaryX = 55.0f;
+    private float _followBoundaryY = 55.0f;
+
+    private float _cameraSpeed = 5.0f;
+
+
     void Start()
     {
         rotationPoint = gameObject.transform.position;
@@ -56,6 +66,9 @@ public class CameraBehaviour : MonoBehaviour
         if (_doRotation)
             Rotate();
 
+       
+
+
     }
 
     void Rotate()
@@ -76,21 +89,19 @@ public class CameraBehaviour : MonoBehaviour
     {
         if(!_doRotation)
         HandleMovement();
-        
+
+        if (!_doRotation)
+        HandleFreeMovement();
+
+
     }
 
-    private float _screenCenterX = Screen.width / 2;
-    private float _screenCenterY = Screen.height / 2;
-
-    [SerializeField]
-    private float _followBoundaryX = 55.0f;
-    private float _followBoundaryY = 55.0f;
 
     void HandleMovement()
     {
         Vector2 playerInScreenSpace = _camera.WorldToScreenPoint(_playerPos.transform.position); //Convert playerpos to screenspace
 
-        Vector3 moveDirection = Vector3.zero;
+        Vector3 moveDir = Vector3.zero;
 
         float dx = playerInScreenSpace.x - _screenCenterX;
 
@@ -98,11 +109,11 @@ public class CameraBehaviour : MonoBehaviour
         {
             if (_screenCenterX < playerInScreenSpace.x) //check on which side
             {
-                moveDirection.x = dx - _followBoundaryX;
+                moveDir.x = dx - _followBoundaryX;
             }
             else
             {
-                moveDirection.x = dx + _followBoundaryX;
+                moveDir.x = dx + _followBoundaryX;
             }
 
         }
@@ -114,21 +125,35 @@ public class CameraBehaviour : MonoBehaviour
         {
             if (_screenCenterY < playerInScreenSpace.y)
             {
-                moveDirection.y = dy - _followBoundaryY;
+                moveDir.y = dy - _followBoundaryY;
             }
             else
             {
-                moveDirection.y = dy + _followBoundaryY;
+                moveDir.y = dy + _followBoundaryY;
             }
 
         }
 
-        moveDirection = transform.rotation * moveDirection ;
+        moveDir = transform.rotation * moveDir; //can't be *= because of quaternion and vector operands
 
 
-        transform.position += moveDirection * Time.deltaTime * _cameraFollowSpeed;
+        transform.position += moveDir * Time.deltaTime * _cameraFollowSpeed; //move the camera
     }
 
+    void HandleFreeMovement()
+    {
+        ///get the input
+        Vector3 cameraMovementDir = Vector3.zero; 
+        cameraMovementDir.x = Input.GetAxis("CameraFreeMovementHorizontal");
+        cameraMovementDir.y = Input.GetAxis("CameraFreeMovementVertical");
+
+        cameraMovementDir = transform.rotation * cameraMovementDir; //can't be *= because of quaternion and vector operands
+
+        transform.position += cameraMovementDir * Time.deltaTime * _cameraSpeed; //move the camera
+
+
+
+    }
 
 }
 
