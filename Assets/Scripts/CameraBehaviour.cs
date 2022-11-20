@@ -12,7 +12,7 @@ public class CameraBehaviour : MonoBehaviour
 
     private Vector3 rotationPoint;
     private bool _doRotation = false;
-    private Vector3 startDir;
+    private Vector3 _startDir;
   
     [SerializeField]
     private float _cameraFollowSpeed = 2.0f;
@@ -33,7 +33,7 @@ public class CameraBehaviour : MonoBehaviour
     {
         rotationPoint = gameObject.transform.position;
        // rotationPoint.z = _playerPos.transform.position.z;
-        startDir = rotationPoint - transform.position;
+        _startDir = rotationPoint - transform.position;
        _camera = GetComponent<Camera>();
     }
     void Update()
@@ -45,7 +45,7 @@ public class CameraBehaviour : MonoBehaviour
                 
                 rotationPoint = _playerPos.transform.position ;
                 //rotationPoint.z = _playerPos.transform.position.z;
-                startDir = rotationPoint - transform.position;
+                _startDir = rotationPoint - transform.position;
                 _doRotation = true;
                 if(_rotationSpeed < 0)
                     _rotationSpeed *= -1;
@@ -55,7 +55,7 @@ public class CameraBehaviour : MonoBehaviour
                 rotationPoint = _playerPos.transform.position;
                 //rotationPoint = transform.position;
                 //rotationPoint.z = _playerPos.transform.position.z;
-                startDir = rotationPoint - transform.position;
+                _startDir = rotationPoint - transform.position;
                 _doRotation = true;
                 if (_rotationSpeed > 0)
                     _rotationSpeed *= -1;
@@ -74,12 +74,12 @@ public class CameraBehaviour : MonoBehaviour
     void Rotate()
     {
         Vector3 targetDir = rotationPoint - transform.position;
-        float currentAngle = Vector3.Angle(targetDir, startDir);
+        float currentAngle = Vector3.Angle(targetDir, _startDir);
   
         if (currentAngle >= 90)
         {
             _doRotation = false;
-            startDir = targetDir;
+            _startDir = targetDir;
             return;
         }
         transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), _rotationSpeed * Time.deltaTime);
@@ -87,17 +87,27 @@ public class CameraBehaviour : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(!_doRotation)
-        HandleMovement();
-
         if (!_doRotation)
-        HandleFreeMovement();
+        {
+            Vector3 cameraMovementDir = Vector3.zero;
+            cameraMovementDir.x = Input.GetAxis("CameraFreeMovementHorizontal");
+            cameraMovementDir.y = Input.GetAxis("CameraFreeMovementVertical");
+            if (cameraMovementDir.x != 0 || cameraMovementDir.y != 0)
+            {
+                HandleFreeMovement(cameraMovementDir);
+            }
+            else
+            {
+                HandleCameraFollow();
+            }
 
+
+        }
 
     }
 
 
-    void HandleMovement()
+    void HandleCameraFollow()
     {
         Vector2 playerInScreenSpace = _camera.WorldToScreenPoint(_playerPos.transform.position); //Convert playerpos to screenspace
 
@@ -140,12 +150,11 @@ public class CameraBehaviour : MonoBehaviour
         transform.position += moveDir * Time.deltaTime * _cameraFollowSpeed; //move the camera
     }
 
-    void HandleFreeMovement()
+    void HandleFreeMovement(Vector3 cameraMovementDir)
     {
-        ///get the input
-        Vector3 cameraMovementDir = Vector3.zero; 
-        cameraMovementDir.x = Input.GetAxis("CameraFreeMovementHorizontal");
-        cameraMovementDir.y = Input.GetAxis("CameraFreeMovementVertical");
+       
+
+        print(cameraMovementDir.x);
 
         cameraMovementDir = transform.rotation * cameraMovementDir; //can't be *= because of quaternion and vector operands
 
