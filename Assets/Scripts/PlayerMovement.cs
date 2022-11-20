@@ -3,22 +3,22 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private Transform _cameraPivot;
-    [SerializeField] private Transform _model;
+    [SerializeField] private Transform _camera;
+    [SerializeField] private Transform _playerModel;
 
     [SerializeField] private float _runningSpeed = 10;
     [SerializeField] private float _jumpHeight = 3f;
     [SerializeField] private float _globalGravity = 9.81f;
 
-    [SerializeField] private bool _detectCollisions = true;
-    [SerializeField] private bool _enableOverlapRecovery = true;
 
     [Space]
     [Header("Debug properties")]
 
+    [SerializeField] private bool _detectCollisions = true;
+    [SerializeField] private bool _enableOverlapRecovery = true;
     [SerializeField] private bool _callMoveFunction = true;
     [SerializeField] private bool _showSkinWidth = false;
-    [SerializeField] private bool _debugOnControllerColliderHit = false;
+    [SerializeField] private bool _debugCollisions = false;
     [SerializeField] private bool _debugIsGrounded = false;
 
     private CharacterController _charCtrl = null;
@@ -87,13 +87,13 @@ public class PlayerMovement : MonoBehaviour
         if (_inputVector.x < 0) rotation += 90;
         else if (_inputVector.x > 0) rotation -= 90;
 
-        _model.rotation = _cameraPivot.rotation * Quaternion.Euler(0, rotation, 0);
+        _playerModel.rotation = _camera.rotation * Quaternion.Euler(0, rotation, 0);
     }
 
     private void ApplyMovement()
     {
         // Move relative to camera rotation
-        Vector3 horizontalMovement = _cameraPivot.rotation * _inputVector * _runningSpeed;
+        Vector3 horizontalMovement = _camera.rotation * _inputVector * _runningSpeed;
 
         _velocity.x = horizontalMovement.x;
         _velocity.z = horizontalMovement.z;
@@ -121,25 +121,26 @@ public class PlayerMovement : MonoBehaviour
         _jump = false;
     }
 
+    #region For debugging purpose
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (!_debugOnControllerColliderHit) return;
-
-        Debug.Log("CollisionFlag: " + _charCtrl.collisionFlags);
-        Debug.Log("Collider: " + hit.collider.name);
+        if (!_debugCollisions) return;
+        Debug.Log("ControllerColliderHit - CollisionFlag: " + _charCtrl.collisionFlags);
+        Debug.Log("ControllerColliderHit - Collider: " + hit.collider.name);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (!_debugCollisions) return;
         Debug.Log("Collision Enter: " + collision.collider.name);
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!_debugCollisions) return;
         Debug.Log("Trigger Enter: " + other.name);
     }
 
-    #region For debugging purpose
     private void OnDrawGizmos()
     {
         if (_charCtrl == null || !_showSkinWidth) return;
