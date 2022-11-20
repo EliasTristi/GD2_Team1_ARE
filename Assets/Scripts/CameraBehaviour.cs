@@ -17,12 +17,14 @@ public class CameraBehaviour : MonoBehaviour
     [SerializeField]
     private float _cameraFollowSpeed = 2.0f;
 
+    Camera _camera;
+
     void Start()
     {
         rotationPoint = gameObject.transform.position;
        // rotationPoint.z = _playerPos.transform.position.z;
         startDir = rotationPoint - transform.position;
-       
+       _camera = GetComponent<Camera>();
     }
     void Update()
     {
@@ -74,61 +76,59 @@ public class CameraBehaviour : MonoBehaviour
     {
         if(!_doRotation)
         HandleMovement();
+        
     }
 
-    void HandleMovement() 
-    {
-        //source: https://www.youtube.com/watch?v=Gwc4VCGEuBM
+    private float _screenCenterX = Screen.width / 2;
+    private float _screenCenterY = Screen.height / 2;
 
-        float boundX = 2.0f;
-        float boundY = 2.0f;
-        float boundZ = 2.0f;
+    [SerializeField]
+    private float _followBoundaryX = 55.0f;
+    private float _followBoundaryY = 55.0f;
+
+    void HandleMovement()
+    {
+        Vector2 playerInScreenSpace = _camera.WorldToScreenPoint(_playerPos.transform.position); //Convert playerpos to screenspace
 
         Vector3 moveDirection = Vector3.zero;
 
-        float dx = _playerPos.transform.position.x - transform.position.x;
+        float dx = playerInScreenSpace.x - _screenCenterX;
 
-        if (dx > boundX || dx < -boundX)
+        if (dx > _followBoundaryX || dx < -_followBoundaryX) //check if outside boundaries
         {
-            //if (transform.position.x < _playerPos.transform.position.x)
-            //{
-            //    moveDirection.x = dx - boundX;
-            //}
-            //else
-            //{
-            //    moveDirection.x = dx + boundX;
-            //}
-
-        }
-
-
-
-        float dy = _playerPos.transform.position.y - transform.position.y;
-
-        if (dy > boundY || dy < -boundY)
-        {
-          
-
-
-
-        }
-
-        float dz = _playerPos.transform.position.z - transform.position.z;
-
-        if (dz > boundZ || dz < -boundZ) //check if outside of the boundary
-        {
-            print("OK");
-            if (transform.position.z < _playerPos.transform.position.z)
+            if (_screenCenterX < playerInScreenSpace.x) //check on which side
             {
-                moveDirection.z = dz - boundZ;
+                moveDirection.x = dx - _followBoundaryX;
             }
             else
             {
-                moveDirection.z = dz + boundZ;
+                moveDirection.x = dx + _followBoundaryX;
             }
+
         }
+
+        //same for y
+        float dy = playerInScreenSpace.y - _screenCenterY;
+
+        if (dy > _followBoundaryY || dy < -_followBoundaryY)
+        {
+            if (_screenCenterY < playerInScreenSpace.y)
+            {
+                moveDirection.y = dy - _followBoundaryY;
+            }
+            else
+            {
+                moveDirection.y = dy + _followBoundaryY;
+            }
+
+        }
+
+        moveDirection = transform.rotation * moveDirection ;
+
 
         transform.position += moveDirection * Time.deltaTime * _cameraFollowSpeed;
     }
+
+
 }
 
