@@ -5,10 +5,11 @@ using UnityEngine;
 public class MapCameraMovement : MonoBehaviour
 {
     public float _speed = 5;
-
-    private float _timer = 0;
     
     private CharacterController characterController;
+    private float _parentYRotation;
+
+    private Vector3 move;
 
     void Start()
     {
@@ -17,10 +18,17 @@ public class MapCameraMovement : MonoBehaviour
 
     void Update()
     {
-        _timer = Time.deltaTime;
+        Debug.Log(Mathf.Round(transform.eulerAngles.y));
 
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), -Input.GetAxis("Horizontal"));
-        
+        if (Mathf.Round(transform.eulerAngles.y) == 0)
+            move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), -Input.GetAxis("Horizontal"));
+        else if (Mathf.Round(transform.eulerAngles.y) == 90)
+            move = new Vector3(-Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), -Input.GetAxis("Horizontal"));
+        else if (Mathf.Round(transform.eulerAngles.y) == 180)
+            move = new Vector3(-Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+        else if (Mathf.Round(transform.eulerAngles.y) == 270)
+            move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+
         characterController.Move(move * Time.deltaTime * _speed);
     }
 }

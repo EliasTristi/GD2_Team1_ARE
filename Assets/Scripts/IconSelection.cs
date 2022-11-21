@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class IconSelection : MonoBehaviour
 {
-    public float _lerpSpeed = 5;
+    public float _lerpSpeed = 20;
 
-    public Vector3 _offset = Vector3.one * 10;
+    public GameObject parent;
+
+    private Vector3 _position = Vector3.zero;
 
     void Start()
     {
@@ -23,11 +25,9 @@ public class IconSelection : MonoBehaviour
             Debug.DrawRay(transform.position, transform.forward * 100, Color.yellow);
             if (hit.collider != null)
             {
-                Vector3 targetPosition = hit.transform.position + _offset;
-                Debug.Log(Vector3.Distance(transform.position, hit.transform.position));
-
+                _position = hit.collider.transform.position;
                 //Debug.Log("collider detected");
-                transform.position = Vector3.Lerp(transform.position, targetPosition, _lerpSpeed * Time.deltaTime);
+                parent.transform.position = Vector3.Slerp(parent.transform.position, _position, _lerpSpeed * Time.deltaTime);
             }
         }
     }
