@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool _debugIsGrounded = false;
 
     private CharacterController _charCtrl = null;
-    private Vector3 _velocity;
+    public Vector3 Velocity;
     private Vector3 _inputVector;
     private Vector3 _jumpForce;
     private bool _jump;
@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
             ApplyGravity();
             ApplyMovement();
             ApplyJump();
-            _charCtrl.Move(_velocity * Time.deltaTime);
+            _charCtrl.Move(Velocity * Time.deltaTime);
         }
 
         if (_debugIsGrounded)
@@ -95,20 +95,20 @@ public class PlayerMovement : MonoBehaviour
         // Move relative to camera rotation
         Vector3 horizontalMovement = _camera.rotation * _inputVector * _runningSpeed;
 
-        _velocity.x = horizontalMovement.x;
-        _velocity.z = horizontalMovement.z;
+        Velocity.x = horizontalMovement.x;
+        Velocity.z = horizontalMovement.z;
     }
 
     private void ApplyGravity()
     {
         if( _charCtrl.isGrounded)
         {
-            _velocity.y = Physics.gravity.y * _charCtrl.skinWidth;
+            Velocity.y = Physics.gravity.y * _charCtrl.skinWidth;
         }
         else
         {
             // v = a * t1-t0
-            _velocity.y += Physics.gravity.y * Time.deltaTime;
+            Velocity.y += Physics.gravity.y * Time.deltaTime;
         }
     }
 
@@ -116,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if( _jump && _charCtrl.isGrounded)
         {
-            _velocity = _jumpForce;
+            Velocity = _jumpForce;
         }
         _jump = false;
     }

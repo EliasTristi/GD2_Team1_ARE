@@ -100,6 +100,7 @@ MonoBehaviour:
   _playerPos: {fileID: 8079937348496540672}
   _rotationSpeed: 80
   _cameraFollowSpeed: 2
+  _followBoundaryX: 55
 --- !u!1 &1555861613
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,6 +428,7 @@ GameObject:
   - component: {fileID: 8943804770613397093}
   - component: {fileID: 1689615457270690881}
   - component: {fileID: 8238437210015961024}
+  - component: {fileID: 302653895408699105}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -521,3 +523,15 @@ MonoBehaviour:
   _showSkinWidth: 0
   _debugCollisions: 0
   _debugIsGrounded: 0
+--- !u!114 &302653895408699105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8079937348496540672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 652f1775133b9dd47aab8feef2cd2bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
