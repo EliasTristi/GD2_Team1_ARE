@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class PlayerZTeleport : MonoBehaviour
 {
-
-    [SerializeField] private Camera _camera;
     [SerializeField] private Transform _levelContainer;
+    [SerializeField] private GameObject _playerRoot;
     [SerializeField] private int _raycastDistance = 1000;
 
+    private Camera _camera;
     private Transform _ZTriggersContainer;
     private CharacterController _charCtrl;
     private LayerMask _platformLayerMask;
@@ -23,8 +23,13 @@ public class PlayerZTeleport : MonoBehaviour
         _platformLayerMask = LayerMask.GetMask("Platform");
         _platformLayer = LayerMask.NameToLayer("Platform");
         _platformZTriggerLayer = LayerMask.NameToLayer("PlatformZTrigger");
+        _charCtrl = _playerRoot.GetComponent<CharacterController>();
+        _camera = Camera.main;
+        _camera.GetComponent<CameraBehaviour>().StopRotation +=
+            (s, e) => UpdateZTriggers();
+
+        if (_levelContainer == null) Debug.LogError("Please select a level container in inspector, this is the object that holds all the platforms");
         _ZTriggersContainer = new GameObject("ZTriggers").transform;
-        _charCtrl = GetComponent<CharacterController>();
 
         CreateZTriggers();
         UpdateZTriggers();
@@ -41,10 +46,10 @@ public class PlayerZTeleport : MonoBehaviour
 
         if (zTrigger.gameObject.layer == _platformZTriggerLayer)
         {
-            Vector3 collisionPoint = zTrigger.ClosestPointOnBounds(transform.position);
-            Vector3 collisionNormal = transform.position - collisionPoint;
+            Vector3 collisionPoint = zTrigger.ClosestPointOnBounds(_playerRoot.transform.position);
+            Vector3 collisionNormal = _playerRoot.transform.position - collisionPoint;
 
-            Debug.Log($"Collision Normal: {collisionNormal} - Player: {transform.position} - Collision Point: {collisionPoint}");
+            Debug.Log($"Collision Normal: {collisionNormal} - Player: {_playerRoot.transform.position} - Collision Point: {collisionPoint}");
             // only use the trigger if player lands on it from above
             if (collisionNormal.y > 0)
             {
@@ -58,7 +63,7 @@ public class PlayerZTeleport : MonoBehaviour
     {
         // look which block is directly below player in 2D and teleport to there in Z space
 
-        Vector3 playerPosition = transform.position;
+        Vector3 playerPosition = _playerRoot.transform.position;
         Vector3 raycastOrigin = new Vector3(playerPosition.x, playerPosition.y - 1, playerPosition.z);
         Vector3 cameraDirection = _camera.transform.forward;
         if (IsCameraAlongZ())
@@ -83,9 +88,9 @@ public class PlayerZTeleport : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Teleport {transform.position} to {playerPosition}");
+        Debug.Log($"Teleport {_playerRoot.transform.position} to {playerPosition}");
         _charCtrl.enabled = false;
-        transform.position = playerPosition;
+        _playerRoot.transform.position = playerPosition;
         _charCtrl.enabled = true;
     }
 
@@ -127,9 +132,9 @@ public class PlayerZTeleport : MonoBehaviour
             Vector3 position = _zTriggerStartPositions[zTrigger];
 
             if (IsCameraAlongZ())
-                position.z = transform.position.z - .5f * zTrigger.transform.localScale.z;
+                position.z = _playerRoot.transform.position.z - .5f * zTrigger.transform.localScale.z;
             else if (IsCameraAlongX())
-                position.x = transform.position.x - .5f * zTrigger.transform.localScale.x;
+                position.x = _playerRoot.transform.position.x - .5f * zTrigger.transform.localScale.x;
             else
             {
                 Debug.LogWarning("Attempted ZTrigger update while camera is not on 90° angle");

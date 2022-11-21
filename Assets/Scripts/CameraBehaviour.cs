@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraBehaviour : MonoBehaviour
 {
+    public EventHandler<EventArgs> StartRotation;
+    public EventHandler<EventArgs> StopRotation;
 
     [SerializeField]
     private GameObject _playerPos;
@@ -12,6 +15,17 @@ public class CameraBehaviour : MonoBehaviour
 
     private Vector3 rotationPoint;
     private bool _doRotation = false;
+
+    private bool DoRotation
+    {
+        get { return _doRotation; }
+        set
+        {
+            _doRotation = value;
+            if (value) OnStartRotation(EventArgs.Empty);
+            else OnStopRotation(EventArgs.Empty);
+        }
+    }
     private Vector3 _startDir;
   
     [SerializeField]
@@ -29,6 +43,7 @@ public class CameraBehaviour : MonoBehaviour
     private float _cameraSpeed = 5.0f;
 
 
+
     void Start()
     {
         rotationPoint = gameObject.transform.position;
@@ -38,7 +53,7 @@ public class CameraBehaviour : MonoBehaviour
     }
     void Update()
     {
-        if (!_doRotation)
+        if (!DoRotation)
         {
             if (Input.GetButtonDown("RotateCameraLeft"))
             {
@@ -62,7 +77,7 @@ public class CameraBehaviour : MonoBehaviour
                 
 
                 _startDir = rotationPoint - transform.position;
-                _doRotation = true;
+                DoRotation = true;
                 if(_rotationSpeed < 0)
                     _rotationSpeed *= -1;
             }
@@ -88,14 +103,14 @@ public class CameraBehaviour : MonoBehaviour
 
 
                 _startDir = rotationPoint - transform.position;
-                _doRotation = true;
+                DoRotation = true;
                 if (_rotationSpeed > 0)
                     _rotationSpeed *= -1;
             }
 
         }
 
-        if (_doRotation)
+        if (DoRotation)
             Rotate();
 
        
@@ -113,15 +128,16 @@ public class CameraBehaviour : MonoBehaviour
 
         if (currentAngle >= 90)
         {
-            _doRotation = false;
-            _startDir = targetDir;
-
             //set to point
            // if(_rotationSpeed > 0)
             transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), 90 - currentAngle );
 
             //if(_rotationSpeed < 0)
             //    transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), -(90 - currentAngle));
+
+
+            _startDir = targetDir;
+            DoRotation = false; // this triggers the StopRotation event, so it must happen at the laxt step
             return;
         }
         transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), _rotationSpeed * Time.deltaTime);
@@ -129,7 +145,7 @@ public class CameraBehaviour : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //if (!_doRotation)
+        //if (!DoRotation)
         //{
         //    Vector3 cameraMovementDir = Vector3.zero;
         //    cameraMovementDir.x = Input.GetAxis("CameraFreeMovementHorizontal");
@@ -215,5 +231,16 @@ public class CameraBehaviour : MonoBehaviour
         return _camera.transform.forward.Abs() == Vector3.forward;
     }
 
+
+    protected virtual void OnStartRotation(EventArgs e)
+    {
+        var handler = StartRotation;
+        handler?.Invoke(this, e);
+    }
+    protected virtual void OnStopRotation(EventArgs e)
+    {
+        var handler = StopRotation;
+        handler?.Invoke(this, e);
+    }
 }
 

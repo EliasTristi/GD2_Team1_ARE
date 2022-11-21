@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private Transform _camera;
     [SerializeField] private Transform _playerModel;
 
     [SerializeField] private float _runningSpeed = 10;
@@ -21,7 +20,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool _debugCollisions = false;
     [SerializeField] private bool _debugIsGrounded = false;
 
-    private CharacterController _charCtrl = null;
+    private CharacterController _charCtrl;
+    private Transform _camera;
     public Vector3 Velocity;
     private Vector3 _inputVector;
     private Vector3 _jumpForce;
@@ -32,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
         _charCtrl = GetComponent<CharacterController>();
         _charCtrl.detectCollisions = _detectCollisions;
         _charCtrl.enableOverlapRecovery = _enableOverlapRecovery;
+
+        _camera = Camera.main.transform;
 
         Physics.gravity = new Vector3(0, -_globalGravity, 0);
 
