@@ -20,9 +20,9 @@ public class PlayerZTeleport : MonoBehaviour
 
     private void Start()
     {
-        _platformLayerMask = LayerMask.GetMask("Platform");
-        _platformLayer = LayerMask.NameToLayer("Platform");
-        _platformZTriggerLayer = LayerMask.NameToLayer("PlatformZTrigger");
+        _platformLayerMask = LayerMask.GetMask("Level");
+        _platformLayer = LayerMask.NameToLayer("Level");
+        _platformZTriggerLayer = LayerMask.NameToLayer("LevelTrigger");
         _charCtrl = _playerRoot.GetComponent<CharacterController>();
         _camera = Camera.main;
         _camera.GetComponent<CameraBehaviour>().StopRotation +=
