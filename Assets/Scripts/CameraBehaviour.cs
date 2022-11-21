@@ -42,9 +42,25 @@ public class CameraBehaviour : MonoBehaviour
         {
             if (Input.GetButtonDown("RotateCameraLeft"))
             {
+                //rotationPoint = _playerPos.transform.position;
+                //rotationPoint.x = _screenCenterX;
+                //rotationPoint.y = _screenCenterY;
+
+                rotationPoint = transform.position;
+                if (IsCameraAlongX())
+                {
+                    rotationPoint.x = _playerPos.transform.position.x;
+                }
+                else if (IsCameraAlongZ())
+                {
+                    rotationPoint.z = _playerPos.transform.position.z;
+                }
+                //old
+                //rotationPoint = _playerPos.transform.position ;
+      
+
                 
-                rotationPoint = _playerPos.transform.position ;
-                //rotationPoint.z = _playerPos.transform.position.z;
+
                 _startDir = rotationPoint - transform.position;
                 _doRotation = true;
                 if(_rotationSpeed < 0)
@@ -52,9 +68,25 @@ public class CameraBehaviour : MonoBehaviour
             }
             else if (Input.GetButtonDown("RotateCameraRight"))
             {
-                rotationPoint = _playerPos.transform.position;
+
+                rotationPoint = transform.position;
+                if (IsCameraAlongX())
+                {
+                    rotationPoint.x = _playerPos.transform.position.x;
+                }
+                else if (IsCameraAlongZ())
+                {
+                    rotationPoint.z = _playerPos.transform.position.z;
+                }
+
+
+                //old 
+                // rotationPoint = _playerPos.transform.position;
+
                 //rotationPoint = transform.position;
                 //rotationPoint.z = _playerPos.transform.position.z;
+
+
                 _startDir = rotationPoint - transform.position;
                 _doRotation = true;
                 if (_rotationSpeed > 0)
@@ -76,10 +108,20 @@ public class CameraBehaviour : MonoBehaviour
         Vector3 targetDir = rotationPoint - transform.position;
         float currentAngle = Vector3.Angle(targetDir, _startDir);
   
+        
+
+
         if (currentAngle >= 90)
         {
             _doRotation = false;
             _startDir = targetDir;
+
+            //set to point
+           // if(_rotationSpeed > 0)
+            transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), 90 - currentAngle );
+
+            //if(_rotationSpeed < 0)
+            //    transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), -(90 - currentAngle));
             return;
         }
         transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), _rotationSpeed * Time.deltaTime);
@@ -87,22 +129,22 @@ public class CameraBehaviour : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!_doRotation)
-        {
-            Vector3 cameraMovementDir = Vector3.zero;
-            cameraMovementDir.x = Input.GetAxis("CameraFreeMovementHorizontal");
-            cameraMovementDir.y = Input.GetAxis("CameraFreeMovementVertical");
-            if (cameraMovementDir.x != 0 || cameraMovementDir.y != 0)
-            {
-                HandleFreeMovement(cameraMovementDir);
-            }
-            else
-            {
-                HandleCameraFollow();
-            }
+        //if (!_doRotation)
+        //{
+        //    Vector3 cameraMovementDir = Vector3.zero;
+        //    cameraMovementDir.x = Input.GetAxis("CameraFreeMovementHorizontal");
+        //    cameraMovementDir.y = Input.GetAxis("CameraFreeMovementVertical");
+        //    if (cameraMovementDir.x != 0 || cameraMovementDir.y != 0)
+        //    {
+        //        HandleFreeMovement(cameraMovementDir);
+        //    }
+        //    else
+        //    {
+        //        HandleCameraFollow();
+        //    }
 
 
-        }
+        //}
 
     }
 
@@ -162,6 +204,15 @@ public class CameraBehaviour : MonoBehaviour
 
 
 
+    }
+
+    private bool IsCameraAlongX()
+    { 
+       return _camera.transform.forward.Abs() == Vector3.right;
+    }
+    private bool IsCameraAlongZ()
+    {
+        return _camera.transform.forward.Abs() == Vector3.forward;
     }
 
 }
