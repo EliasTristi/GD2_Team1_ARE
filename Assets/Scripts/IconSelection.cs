@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class IconSelection : MonoBehaviour
 {
-    public float _lerpSpeed = 20;
+    public float _lerpSpeed = 15;
 
     public GameObject parent;
 
