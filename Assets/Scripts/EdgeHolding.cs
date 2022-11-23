@@ -10,6 +10,7 @@ public class EdgeHolding : MonoBehaviour
 
     private CharacterController _player;
     private PlayerMovement _playerMovement;
+    private VinesClimbing _vinesClimbing;
 
     [SerializeField]
     private Transform _cameraTransform;
@@ -25,6 +26,7 @@ public class EdgeHolding : MonoBehaviour
     {
         _player = GetComponent<CharacterController>();
         _playerMovement = GetComponent<PlayerMovement>();
+        _vinesClimbing = GetComponent<VinesClimbing>();
     }
 
     private void Update()
@@ -36,7 +38,7 @@ public class EdgeHolding : MonoBehaviour
                 EdgeMovement();
             }
 
-            if (_edgeFound && Input.GetKeyDown(KeyCode.UpArrow))
+            if (_edgeFound && Input.GetKey(KeyCode.UpArrow))
             {
                 GrabEdge();
             }
@@ -70,6 +72,7 @@ public class EdgeHolding : MonoBehaviour
     {
         _playerMovement.Velocity = Vector3.zero;
         _playerMovement.enabled = false;
+        _vinesClimbing.enabled = false;
         _HangingOnEdge = true;
 
         Vector3 previousPosition;
@@ -120,6 +123,7 @@ public class EdgeHolding : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             _playerMovement.enabled = true;
+            _vinesClimbing.enabled = true;
             _HangingOnEdge = false;
 
             _playerMovement.Velocity = -Physics.gravity.normalized * Mathf.Sqrt(2 * Physics.gravity.magnitude * _edgeJumpHeight);
@@ -151,6 +155,7 @@ public class EdgeHolding : MonoBehaviour
 
             _climbing = false;
             _playerMovement.enabled = true;
+            _vinesClimbing.enabled = true;
         }
     }
 }
