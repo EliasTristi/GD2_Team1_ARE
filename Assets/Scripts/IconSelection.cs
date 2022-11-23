@@ -10,12 +10,7 @@ public class IconSelection : MonoBehaviour
     public GameObject parent;
 
     private Vector3 _position = Vector3.zero;
-
-    void Start()
-    {
-
-    }
-
+    
     void Update()
     {
         RaycastHit hit;

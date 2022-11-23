@@ -18,7 +18,7 @@ public class MapCameraMovement : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(Mathf.Round(transform.eulerAngles.y));
+        //Debug.Log(Mathf.Round(transform.eulerAngles.y));
 
         if (Mathf.Round(transform.eulerAngles.y) == 0)
             move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), -Input.GetAxis("Horizontal"));

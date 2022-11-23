@@ -193,7 +193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7826436482352143696, guid: ded89e02d995d724ea74b6ec8ccbe0b4, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7826436482352143696, guid: ded89e02d995d724ea74b6ec8ccbe0b4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -447,7 +447,7 @@ Transform:
   m_Children:
   - {fileID: 1831745627}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &923108081
 CharacterController:
@@ -480,7 +480,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7826436482352143696, guid: ded89e02d995d724ea74b6ec8ccbe0b4, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7826436482352143696, guid: ded89e02d995d724ea74b6ec8ccbe0b4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -537,7 +537,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7826436482352143696, guid: ded89e02d995d724ea74b6ec8ccbe0b4, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7826436482352143696, guid: ded89e02d995d724ea74b6ec8ccbe0b4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -650,6 +650,7 @@ GameObject:
   - component: {fileID: 1831745626}
   - component: {fileID: 1831745625}
   - component: {fileID: 1831745630}
+  - component: {fileID: 1831745631}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -737,6 +738,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _lerpSpeed: 15
   parent: {fileID: 923108077}
+--- !u!114 &1831745631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831745624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a40094bdcd585d4a826e867549218d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3879561707034848053
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -750,7 +763,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7826436482352143696, guid: ded89e02d995d724ea74b6ec8ccbe0b4, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7826436482352143696, guid: ded89e02d995d724ea74b6ec8ccbe0b4, type: 3}
       propertyPath: m_LocalPosition.x
