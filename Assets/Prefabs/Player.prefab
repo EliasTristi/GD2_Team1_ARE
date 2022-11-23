@@ -192,7 +192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62fa133b02fbd894e91c505893ca9a19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelContainer: {fileID: 0}
   _playerRoot: {fileID: 8079937348496540672}
   _raycastDistance: 1000
 --- !u!1 &5427796922325380039
@@ -373,6 +372,8 @@ GameObject:
   - component: {fileID: 1063354305943450876}
   - component: {fileID: 8238437210015961024}
   - component: {fileID: 302653895408699105}
+  - component: {fileID: 7507066302024587193}
+  - component: {fileID: 6635310816478538014}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -453,3 +454,35 @@ MonoBehaviour:
   _cubeCollected:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7507066302024587193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8079937348496540672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa57be29ea7c7e24180c1e08e875a188, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _platformMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _cameraTransform: {fileID: 0}
+--- !u!114 &6635310816478538014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8079937348496540672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3ab44f0694f3b348abd566ee96a0d16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cameraTransform: {fileID: 0}
+  _allExceptZTriggerAndDefault:
+    serializedVersion: 2
+    m_Bits: 438
