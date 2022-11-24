@@ -27,8 +27,8 @@ InputManager:
     descriptiveNegativeName: 
     negativeButton: down
     positiveButton: up
-    altNegativeButton: s
-    altPositiveButton: w
+    altNegativeButton: 
+    altPositiveButton: 
     gravity: 3
     dead: 0.001
     sensitivity: 3
@@ -313,8 +313,8 @@ InputManager:
     m_Name: MapZoomMin
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: '-'
-    positiveButton: 
+    negativeButton: 
+    positiveButton: s
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1000
@@ -330,7 +330,7 @@ InputManager:
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: =
+    positiveButton: w
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1000
