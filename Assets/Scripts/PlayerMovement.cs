@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _inputVector;
     private Vector3 _jumpForce;
     private bool _jump;
+    private bool _freeze = false;
 
     private void Start()
     {
@@ -34,6 +35,10 @@ public class PlayerMovement : MonoBehaviour
         _charCtrl.enableOverlapRecovery = _enableOverlapRecovery;
 
         _camera = Camera.main.transform;
+        _camera.GetComponent<CameraBehaviour>().StartRotation +=
+            (s, e) => _freeze = true;
+        _camera.GetComponent<CameraBehaviour>().StopRotation +=
+            (s, e) => _freeze = false;
 
         Physics.gravity = new Vector3(0, -_globalGravity, 0);
 
@@ -62,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_callMoveFunction)
+        if (_callMoveFunction && !_freeze)
         {
             ApplyGravity();
             ApplyMovement();
