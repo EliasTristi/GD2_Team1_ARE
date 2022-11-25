@@ -11,24 +11,58 @@ public class PlayerZTeleport : MonoBehaviour
     private Camera _camera;
     private Transform _ZTriggersContainer;
     private CharacterController _charCtrl;
+
+    private int _platformLayer;
+    private int _playerLayer;
     private int _ZTriggerLayer;
     private LayerMask _platformLayerMask;
+    private int _platformPlayerLayerMask;
+
     private Dictionary<GameObject, Vector3> _zTriggerStartPositions
         = new Dictionary<GameObject, Vector3>();
+    private bool _wasBehindPlatform = false;
+    private bool _isBehindPlatform = false;
+    private bool _ignoreBehindPlatform = false;
 
     private void Start()
     {
+        _platformLayer = LayerMask.NameToLayer("Platform");
+        _playerLayer = LayerMask.NameToLayer("Player");
         _ZTriggerLayer = LayerMask.NameToLayer("ZTrigger");
         _platformLayerMask = LayerMask.GetMask("Platform");
+        _platformPlayerLayerMask = LayerMask.GetMask("Platform", "Player");
         _charCtrl = _playerRoot.GetComponent<CharacterController>();
         _camera = Camera.main;
-        _camera.GetComponent<CameraBehaviour>().StopRotation +=
-            (s, e) => UpdateZTriggers();
+
+        var cameraScript = _camera.GetComponent<CameraBehaviour>();
+        cameraScript.StartRotation +=
+            (s, e) => _ignoreBehindPlatform = true;
+        cameraScript.StopRotation +=
+            (s, e) =>
+            {
+                _ignoreBehindPlatform = false;
+                _isBehindPlatform = true;
+                _wasBehindPlatform = true;
+                UpdateZTriggers();
+            };
 
         _ZTriggersContainer = new GameObject("ZTriggers").transform;
 
         CreateZTriggers();
         UpdateZTriggers();
+    }
+
+    private void Update()
+    {
+        // If the player moves behind an object, teleport to front
+        // If the player moves away from being behind an object, do nothing
+        // If the player moves behind an object while camera is turning, do nothing
+        if (!_ignoreBehindPlatform)
+        {
+            UpdateIsBehindPlatform();
+            if (_isBehindPlatform && !_wasBehindPlatform)
+                TeleportToFrontOfPlatform();
+        }
     }
 
     private void OnTriggerEnter(Collider zTrigger)
@@ -161,6 +195,22 @@ public class PlayerZTeleport : MonoBehaviour
 
             zTrigger.transform.position = position;
         }
+    }
+
+    private void UpdateIsBehindPlatform()
+    {
+        _wasBehindPlatform = _isBehindPlatform;
+
+        Vector3 playerPosition = _playerRoot.transform.position;
+        Vector3 cameraDirection = _camera.transform.forward;
+        Vector3 raycastOrigin = playerPosition;
+        if (IsCameraAlongZ()) raycastOrigin.z = _camera.transform.position.z;
+        else if (IsCameraAlongX()) raycastOrigin.x = _camera.transform.position.x;
+
+        _isBehindPlatform = false;
+        if (Physics.Raycast(raycastOrigin, cameraDirection, out RaycastHit hitInfo, _raycastDistance, _platformPlayerLayerMask))
+            if (hitInfo.collider.gameObject.layer == _platformLayer)
+                _isBehindPlatform = true;
     }
 
     private bool IsCameraAlongX()
