@@ -20,7 +20,21 @@ public class PickUpObjects : MonoBehaviour
     {
         get
         {
-            return _camera.transform.forward.Abs() == Vector3.right;
+            return _camera.transform.forward == Vector3.right;
+        }
+    }
+    private bool IsCameraAlongZ
+    {
+        get
+        {
+            return _camera.transform.forward == Vector3.forward;
+        }
+    }
+    private bool IsCameraAgainstZ
+    {
+        get
+        {
+            return _camera.transform.forward == -Vector3.forward;
         }
     }
 
@@ -53,11 +67,19 @@ public class PickUpObjects : MonoBehaviour
 
         if (IsCameraAlongX)
         {
-            itemBody.AddForce(0, _throwForce.y, _throwForce.x * _throwDirection);
+            itemBody.AddForce(0, _throwForce.y, -_throwForce.x * _throwDirection);
+        }
+        else if(IsCameraAlongZ)
+        {
+            itemBody.AddForce(_throwForce.x * _throwDirection, _throwForce.y, 0);
+        }
+        else if (IsCameraAgainstZ)
+        {
+            itemBody.AddForce(-_throwForce.x * _throwDirection, _throwForce.y, 0);
         }
         else
         {
-            itemBody.AddForce(_throwForce.x * _throwDirection, _throwForce.y, 0);
+            itemBody.AddForce(0, _throwForce.y, _throwForce.x * _throwDirection);
         }
 
         itemBody.useGravity = true;
