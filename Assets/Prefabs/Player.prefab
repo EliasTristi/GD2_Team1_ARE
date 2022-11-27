@@ -374,6 +374,7 @@ GameObject:
   - component: {fileID: 302653895408699105}
   - component: {fileID: 7507066302024587193}
   - component: {fileID: 6635310816478538014}
+  - component: {fileID: 4458269426294499806}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -486,3 +487,19 @@ MonoBehaviour:
   _allExceptZTriggerAndDefault:
     serializedVersion: 2
     m_Bits: 438
+--- !u!114 &4458269426294499806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8079937348496540672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 137cc414872030c45ae7b49c4de887ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _throwForce: {x: 180, y: 200}
+  _pickable:
+    serializedVersion: 2
+    m_Bits: 2048
