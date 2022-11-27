@@ -1429,6 +1429,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1845839267764655063, guid: 425383f9a792b764eb2be06da288f4de, type: 3}
+      propertyPath: _rotationDirection
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 5432120566744040618, guid: 425383f9a792b764eb2be06da288f4de, type: 3}
       propertyPath: m_Name
       value: RotatingPlatform

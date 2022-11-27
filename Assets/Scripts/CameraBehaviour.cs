@@ -11,12 +11,12 @@ public class CameraBehaviour : MonoBehaviour
     [SerializeField]
     private GameObject _playerPos;
     [SerializeField]
-    private float _rotationSpeed = 40.0f;
+    public float RotationSpeed = 40.0f;
 
     private Vector3 rotationPoint;
     private bool _doRotation = false;
 
-    private bool DoRotation
+    public bool DoRotation
     {
         get { return _doRotation; }
         set
@@ -78,8 +78,8 @@ public class CameraBehaviour : MonoBehaviour
 
                 _startDir = rotationPoint - transform.position;
                 DoRotation = true;
-                if(_rotationSpeed < 0)
-                    _rotationSpeed *= -1;
+                if(RotationSpeed < 0)
+                    RotationSpeed *= -1;
             }
             else if (Input.GetButtonDown("RotateCameraRight"))
             {
@@ -104,8 +104,8 @@ public class CameraBehaviour : MonoBehaviour
 
                 _startDir = rotationPoint - transform.position;
                 DoRotation = true;
-                if (_rotationSpeed > 0)
-                    _rotationSpeed *= -1;
+                if (RotationSpeed > 0)
+                    RotationSpeed *= -1;
             }
 
         }
@@ -140,7 +140,7 @@ public class CameraBehaviour : MonoBehaviour
             DoRotation = false; // this triggers the StopRotation event, so it must happen at the laxt step
             return;
         }
-        transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), _rotationSpeed * Time.deltaTime);
+        transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), RotationSpeed * Time.deltaTime);
     }
 
     private void FixedUpdate()
