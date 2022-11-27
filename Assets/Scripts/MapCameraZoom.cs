@@ -17,15 +17,15 @@ public class MapCameraZoom : MonoBehaviour
 
     void Update()
     {
-        Debug.Log($"size {_cam.orthographicSize}, zoom {_zoom}");
+        //Debug.Log($"size {_cam.orthographicSize}, zoom {_zoom}");
 
         _timer += Time.deltaTime;
 
-        if (Input.GetButtonDown("MapZoomMin") && _cam.orthographicSize <= 6)
+        if (Input.GetButtonDown("MapZoomMin") && _cam.orthographicSize <= 8)
         {
             _zoom = _cam.orthographicSize + 1;
         }
-        else if (Input.GetButtonDown("MapZoomMax") && _cam.orthographicSize >= 4)
+        else if (Input.GetButtonDown("MapZoomMax") && _cam.orthographicSize >= 5)
         {
             _zoom = _cam.orthographicSize - 1;
         }

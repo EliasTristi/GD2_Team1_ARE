@@ -7,7 +7,7 @@ public class MapCameraMovement : MonoBehaviour
     public float _speed = 5;
     
     private CharacterController characterController;
-    private float _parentYRotation;
+    //private float _parentYRotation;
 
     private Vector3 move;
 
@@ -18,16 +18,16 @@ public class MapCameraMovement : MonoBehaviour
 
     void Update()
     {
-        //Debug.Log(Mathf.Round(transform.eulerAngles.y));
-
-        if (Mathf.Round(transform.eulerAngles.y) == 0)
+        if (Mathf.Round(transform.eulerAngles.y) == 45)
             move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), -Input.GetAxis("Horizontal"));
-        else if (Mathf.Round(transform.eulerAngles.y) == 90)
+        else if (Mathf.Round(transform.eulerAngles.y) == 135)
             move = new Vector3(-Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), -Input.GetAxis("Horizontal"));
-        else if (Mathf.Round(transform.eulerAngles.y) == 180)
+        else if (Mathf.Round(transform.eulerAngles.y) == 225)
             move = new Vector3(-Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
-        else if (Mathf.Round(transform.eulerAngles.y) == 270)
+        else if (Mathf.Round(transform.eulerAngles.y) == 315)
             move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+
+        //Debug.Log(Mathf.Round(transform.eulerAngles.y));
 
         characterController.Move(move * Time.deltaTime * _speed);
     }
