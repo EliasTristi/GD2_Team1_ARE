@@ -132,28 +132,28 @@ public class CameraBehaviour : MonoBehaviour
 
    bool _hasFreeMoved = false;
 
-    [SerializeField]
-    private List<Transform> _cameraPositions;
+    //[SerializeField]
+    //private List<Transform> _cameraPositions;
 
-    private Vector3 GetClosestCameraPos()
-    {
-        Vector3 closestPos = Vector3.zero;
-        float closestDistance = float.MaxValue;
+    //private Vector3 GetClosestCameraPos()
+    //{
+    //    Vector3 closestPos = Vector3.zero;
+    //    float closestDistance = float.MaxValue;
 
-        foreach(var camPosTransform in _cameraPositions)
-        {
-           float distance = Vector3.Distance(transform.position, camPosTransform.position);
+    //    foreach(var camPosTransform in _cameraPositions)
+    //    {
+    //       float distance = Vector3.Distance(transform.position, camPosTransform.position);
 
-           distance = MathF.Abs(distance);
-            print(distance);
-            if(distance < closestDistance)
-            closestDistance = distance;
-            closestPos = camPosTransform.position;
-        }
+    //       distance = MathF.Abs(distance);
+    //        print(distance);
+    //        if(distance < closestDistance)
+    //        closestDistance = distance;
+    //        closestPos = camPosTransform.position;
+    //    }
 
 
-        return closestPos;
-    }
+    //    return closestPos;
+    //}
 
 
     void Rotate()
