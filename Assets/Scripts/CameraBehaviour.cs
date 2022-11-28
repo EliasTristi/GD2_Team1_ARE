@@ -70,8 +70,7 @@ public class CameraBehaviour : MonoBehaviour
                 {
                     rotationPoint.z = _playerPos.transform.position.z;
                 }
-                //old
-                //rotationPoint = _playerPos.transform.position ;
+                
       
 
                 
@@ -80,6 +79,9 @@ public class CameraBehaviour : MonoBehaviour
                 DoRotation = true;
                 if(RotationSpeed < 0)
                     RotationSpeed *= -1;
+
+                //CalculateEndPos();
+               // CalcEndPos();
             }
             else if (Input.GetButtonDown("RotateCameraRight"))
             {
@@ -106,6 +108,8 @@ public class CameraBehaviour : MonoBehaviour
                 DoRotation = true;
                 if (RotationSpeed > 0)
                     RotationSpeed *= -1;
+                //CalculateEndPos();
+               // CalcEndPos();
             }
 
         }
@@ -113,10 +117,67 @@ public class CameraBehaviour : MonoBehaviour
         if (DoRotation)
             Rotate();
 
-       
+
 
 
     }
+
+    Vector3 _endPos;
+
+    //void CalculateEndPos()
+    //{
+
+
+
+    //    float distance = Vector3.Distance(transform.position, rotationPoint);
+
+    //    float angle = 90.0f;
+
+    //    //if(RotationSpeed < 0)
+    //    //    angle *= -1;
+
+    //    //  x = transform.position.x + distance * Math.Cos(angle) * Math.Sin(0)
+
+    //    print(distance);
+
+    //    if (IsCameraAlongX())
+    //    {
+    //        _endPos.x = transform.position.x + distance * (float)(Math.Cos(angle) * Math.Sin(0));
+    //        _endPos.z = transform.position.z + distance * (float)(Math.Cos(angle) * Math.Cos(0));
+    //        _endPos.y = transform.position.y;
+    //    }
+    //    else if (IsCameraAlongZ())
+    //    {
+    //        _endPos.x = transform.position.x + distance * (float)(Math.Cos(angle) * Math.Sin(0));
+    //        _endPos.z = transform.position.z + distance * (float)(Math.Cos(angle) * Math.Cos(0));
+    //        _endPos.y = transform.position.y;
+    //    }
+    //}
+
+
+    //void CalcEndPos()
+    //{
+        //float angle = 90;
+        //if (RotationSpeed < 0)
+        //    angle *= -1;
+
+        //Vector3 direction = transform.position - rotationPoint;
+
+        //Vector3 endDirection = Quaternion.Euler(0, angle, 0) * direction;
+
+        //float distance = Vector3.Distance(transform.position, rotationPoint);
+
+        //Vector3 endPos = endDirection * distance;
+
+        //transform.position = endPos;
+
+
+        ////transform.Translate(endDirection, distance);
+
+
+        //var dx = Mathf.Sin(angle) * distance;
+
+    //}
 
     void Rotate()
     {
@@ -128,17 +189,34 @@ public class CameraBehaviour : MonoBehaviour
 
         if (currentAngle >= 90)
         {
-            //set to point
-           // if(_rotationSpeed > 0)
-            transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), 90 - currentAngle );
+         
+            print(currentAngle);
 
-            //if(_rotationSpeed < 0)
-            //    transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), -(90 - currentAngle));
+            float deltaAngle = currentAngle - 90;
+
+            if (RotationSpeed > 0)
+                transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), -deltaAngle);
+
+            if (RotationSpeed < 0)
+                transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), deltaAngle);
+
+            // transform.position = _endPos;
+
+            if (IsCameraAlongX())
+            {
+                _startDir = targetDir;
+                DoRotation = false; // this triggers the StopRotation event, so it must happen at the laxt step
+                return;
+            }
+            else if (IsCameraAlongZ())
+            {
+                _startDir = targetDir;
+                DoRotation = false; // this triggers the StopRotation event, so it must happen at the laxt step
+                return;
+            }
 
 
-            _startDir = targetDir;
-            DoRotation = false; // this triggers the StopRotation event, so it must happen at the laxt step
-            return;
+      
         }
         transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), RotationSpeed * Time.deltaTime);
     }
