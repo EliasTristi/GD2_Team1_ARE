@@ -11,7 +11,7 @@ public class CameraBehaviour : MonoBehaviour
     [SerializeField]
     private GameObject _playerPos;
     [SerializeField]
-    public float RotationSpeed = 40.0f;
+    public float RotationSpeed = 180.0f;
 
     private Vector3 rotationPoint;
     private bool _doRotation = false;
@@ -124,60 +124,7 @@ public class CameraBehaviour : MonoBehaviour
 
     Vector3 _endPos;
 
-    //void CalculateEndPos()
-    //{
-
-
-
-    //    float distance = Vector3.Distance(transform.position, rotationPoint);
-
-    //    float angle = 90.0f;
-
-    //    //if(RotationSpeed < 0)
-    //    //    angle *= -1;
-
-    //    //  x = transform.position.x + distance * Math.Cos(angle) * Math.Sin(0)
-
-    //    print(distance);
-
-    //    if (IsCameraAlongX())
-    //    {
-    //        _endPos.x = transform.position.x + distance * (float)(Math.Cos(angle) * Math.Sin(0));
-    //        _endPos.z = transform.position.z + distance * (float)(Math.Cos(angle) * Math.Cos(0));
-    //        _endPos.y = transform.position.y;
-    //    }
-    //    else if (IsCameraAlongZ())
-    //    {
-    //        _endPos.x = transform.position.x + distance * (float)(Math.Cos(angle) * Math.Sin(0));
-    //        _endPos.z = transform.position.z + distance * (float)(Math.Cos(angle) * Math.Cos(0));
-    //        _endPos.y = transform.position.y;
-    //    }
-    //}
-
-
-    //void CalcEndPos()
-    //{
-        //float angle = 90;
-        //if (RotationSpeed < 0)
-        //    angle *= -1;
-
-        //Vector3 direction = transform.position - rotationPoint;
-
-        //Vector3 endDirection = Quaternion.Euler(0, angle, 0) * direction;
-
-        //float distance = Vector3.Distance(transform.position, rotationPoint);
-
-        //Vector3 endPos = endDirection * distance;
-
-        //transform.position = endPos;
-
-
-        ////transform.Translate(endDirection, distance);
-
-
-        //var dx = Mathf.Sin(angle) * distance;
-
-    //}
+   bool _hasFreeMoved = false;
 
     void Rotate()
     {
@@ -204,17 +151,18 @@ public class CameraBehaviour : MonoBehaviour
 
             if (IsCameraAlongX())
             {
+         
                 _startDir = targetDir;
                 DoRotation = false; // this triggers the StopRotation event, so it must happen at the laxt step
                 return;
             }
             else if (IsCameraAlongZ())
             {
+              
                 _startDir = targetDir;
                 DoRotation = false; // this triggers the StopRotation event, so it must happen at the laxt step
                 return;
             }
-
 
       
         }
@@ -223,22 +171,31 @@ public class CameraBehaviour : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //if (!DoRotation)
-        //{
-        //    Vector3 cameraMovementDir = Vector3.zero;
-        //    cameraMovementDir.x = Input.GetAxis("CameraFreeMovementHorizontal");
-        //    cameraMovementDir.y = Input.GetAxis("CameraFreeMovementVertical");
-        //    if (cameraMovementDir.x != 0 || cameraMovementDir.y != 0)
-        //    {
-        //        HandleFreeMovement(cameraMovementDir);
-        //    }
-        //    else
-        //    {
-        //        HandleCameraFollow();
-        //    }
+        if (!DoRotation)
+        {
+            Vector3 cameraMovementDir = Vector3.zero;
+            cameraMovementDir.x = Input.GetAxis("CameraFreeMovementHorizontal");
+            cameraMovementDir.y = Input.GetAxis("CameraFreeMovementVertical");
+            if (cameraMovementDir.x != 0 || cameraMovementDir.y != 0)
+            {
+               _hasFreeMoved = true;
+            }
+
+            if(_hasFreeMoved)
+            {
+                HandleFreeMovement(cameraMovementDir);
+            }
+
+            //handlefreemovement uses camerafollow to snap back to the player center
+            if (!_hasFreeMoved) //allows it to instantly snap back after it goes out of bound
+            {
+                HandleCameraFollow();
+            }
+           
+            
 
 
-        //}
+        }
 
     }
 
@@ -286,19 +243,68 @@ public class CameraBehaviour : MonoBehaviour
         transform.position += moveDir * Time.deltaTime * _cameraFollowSpeed; //move the camera
     }
 
+    [SerializeField]
+    float _freeMoveBoundaryX = 50;
+
+    [SerializeField]
+    float _freeMoveBoundaryY = 50;
+
     void HandleFreeMovement(Vector3 cameraMovementDir)
     {
-       
 
-        print(cameraMovementDir.x);
+        if (cameraMovementDir != Vector3.zero)
+        {
+            print(cameraMovementDir.x);
 
-        cameraMovementDir = transform.rotation * cameraMovementDir; //can't be *= because of quaternion and vector operands
+            cameraMovementDir = transform.rotation * cameraMovementDir; //can't be *= because of quaternion and vector operands
 
-        transform.position += cameraMovementDir * Time.deltaTime * _cameraSpeed; //move the camera
+            transform.position += cameraMovementDir * Time.deltaTime * _cameraSpeed; //move the camera
+
+
+        }
+
+
+        Vector2 playerInScreenSpace = _camera.WorldToScreenPoint(_playerPos.transform.position); //Convert playerpos to screenspace
+
+        float boundaryPosLeft = 0 + _freeMoveBoundaryX;
+        float boundaryPosRight = Screen.width - _freeMoveBoundaryX;
+        float boundaryPosBot = 0 + _freeMoveBoundaryY;
+        float boundaryPosTop = Screen.height - _freeMoveBoundaryY;
+
+
+        if (playerInScreenSpace.x > boundaryPosRight) 
+        {
+
+            _hasFreeMoved = false;
+            return;
+
+        }
+        else if (playerInScreenSpace.x < boundaryPosLeft)
+        {
+            _hasFreeMoved = false;
+            return;
+        }
+
+        if (playerInScreenSpace.y > boundaryPosTop)
+        {
+            _hasFreeMoved = false;
+            return;
+        }
+        else if (playerInScreenSpace.y < boundaryPosBot)
+        {
+            _hasFreeMoved = false;
+            return;
+        }
+
+
 
 
 
     }
+
+
+
+
 
     private bool IsCameraAlongX()
     { 
