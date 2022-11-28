@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class RotatablePlatform : MonoBehaviour, IInteractible
 {
-    private float _rotationSpeed = 40;
+    private float _rotationSpeed = 90;
     private float _rotationAngle = 90;
     private int _rotationDirection;
     private float _rotationAngleDone;

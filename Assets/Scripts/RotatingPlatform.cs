@@ -6,7 +6,7 @@ using UnityEngine;
 public class RotatingPlatform : MonoBehaviour
 {
     private const int _rotationAngle = 90;
-    private const float _rotationSpeed = 40f;
+    private const float _rotationSpeed = 180f;
     [SerializeField]
     private float _rotationFrequency = 3f;
     private float _delay;
@@ -40,7 +40,7 @@ public class RotatingPlatform : MonoBehaviour
         playerDetector.GetComponent<BoxCollider>().size = new Vector3(1 + ((1/transform.localScale.x)), 1 + ((1 / transform.localScale.y) / 5), 1 + ((1 / transform.localScale.z)));
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (_isRotating)
             RotatePlatform();
@@ -54,7 +54,7 @@ public class RotatingPlatform : MonoBehaviour
     private void Wait()
     {
         if (_delay < _rotationFrequency)
-            _delay += Time.fixedDeltaTime;
+            _delay += Time.deltaTime;
         else
         {
             _delay -= _delay;
@@ -67,7 +67,7 @@ public class RotatingPlatform : MonoBehaviour
     {
         RotationStarts = false;
 
-        float rotation = _rotationSpeed * Time.fixedDeltaTime;
+        float rotation = _rotationSpeed * Time.deltaTime;
 
         if (_rotationAngleDone + rotation <= _rotationAngle)
         {

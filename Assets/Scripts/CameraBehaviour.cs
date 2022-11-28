@@ -13,7 +13,7 @@ public class CameraBehaviour : MonoBehaviour
     [SerializeField]
     public float RotationSpeed = 180.0f;
 
-    private Vector3 rotationPoint;
+    public Vector3 RotationPoint;
     private bool _doRotation = false;
 
     public bool DoRotation
@@ -26,7 +26,7 @@ public class CameraBehaviour : MonoBehaviour
             else OnStopRotation(EventArgs.Empty);
         }
     }
-    private Vector3 _startDir;
+    public Vector3 StartDir;
   
     [SerializeField]
     private float _cameraFollowSpeed = 2.0f;
@@ -46,9 +46,9 @@ public class CameraBehaviour : MonoBehaviour
 
     void Start()
     {
-        rotationPoint = gameObject.transform.position;
+        RotationPoint = gameObject.transform.position;
        // rotationPoint.z = _playerPos.transform.position.z;
-        _startDir = rotationPoint - transform.position;
+        StartDir = RotationPoint - transform.position;
        _camera = GetComponent<Camera>();
     }
     void Update()
@@ -61,21 +61,21 @@ public class CameraBehaviour : MonoBehaviour
                 //rotationPoint.x = _screenCenterX;
                 //rotationPoint.y = _screenCenterY;
 
-                rotationPoint = transform.position;
+                RotationPoint = transform.position;
                 if (IsCameraAlongX())
                 {
-                    rotationPoint.x = _playerPos.transform.position.x;
+                    RotationPoint.x = _playerPos.transform.position.x;
                 }
                 else if (IsCameraAlongZ())
                 {
-                    rotationPoint.z = _playerPos.transform.position.z;
+                    RotationPoint.z = _playerPos.transform.position.z;
                 }
                 
       
 
                 
 
-                _startDir = rotationPoint - transform.position;
+                StartDir = RotationPoint - transform.position;
                 DoRotation = true;
                 if(RotationSpeed < 0)
                     RotationSpeed *= -1;
@@ -86,14 +86,14 @@ public class CameraBehaviour : MonoBehaviour
             else if (Input.GetButtonDown("RotateCameraRight"))
             {
 
-                rotationPoint = transform.position;
+                RotationPoint = transform.position;
                 if (IsCameraAlongX())
                 {
-                    rotationPoint.x = _playerPos.transform.position.x;
+                    RotationPoint.x = _playerPos.transform.position.x;
                 }
                 else if (IsCameraAlongZ())
                 {
-                    rotationPoint.z = _playerPos.transform.position.z;
+                    RotationPoint.z = _playerPos.transform.position.z;
                 }
 
 
@@ -104,7 +104,7 @@ public class CameraBehaviour : MonoBehaviour
                 //rotationPoint.z = _playerPos.transform.position.z;
 
 
-                _startDir = rotationPoint - transform.position;
+                StartDir = RotationPoint - transform.position;
                 DoRotation = true;
                 if (RotationSpeed > 0)
                     RotationSpeed *= -1;
@@ -128,8 +128,8 @@ public class CameraBehaviour : MonoBehaviour
 
     void Rotate()
     {
-        Vector3 targetDir = rotationPoint - transform.position;
-        float currentAngle = Vector3.Angle(targetDir, _startDir);
+        Vector3 targetDir = RotationPoint - transform.position;
+        float currentAngle = Vector3.Angle(targetDir, StartDir);
   
         
 
@@ -142,31 +142,31 @@ public class CameraBehaviour : MonoBehaviour
             float deltaAngle = currentAngle - 90;
 
             if (RotationSpeed > 0)
-                transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), -deltaAngle);
+                transform.RotateAround(RotationPoint, new Vector3(0, 1, 0), -deltaAngle);
 
             if (RotationSpeed < 0)
-                transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), deltaAngle);
+                transform.RotateAround(RotationPoint, new Vector3(0, 1, 0), deltaAngle);
 
             // transform.position = _endPos;
 
             if (IsCameraAlongX())
             {
          
-                _startDir = targetDir;
+                StartDir = targetDir;
                 DoRotation = false; // this triggers the StopRotation event, so it must happen at the laxt step
                 return;
             }
             else if (IsCameraAlongZ())
             {
               
-                _startDir = targetDir;
+                StartDir = targetDir;
                 DoRotation = false; // this triggers the StopRotation event, so it must happen at the laxt step
                 return;
             }
 
       
         }
-        transform.RotateAround(rotationPoint, new Vector3(0, 1, 0), RotationSpeed * Time.deltaTime);
+        transform.RotateAround(RotationPoint, new Vector3(0, 1, 0), RotationSpeed * Time.deltaTime);
     }
 
     private void FixedUpdate()

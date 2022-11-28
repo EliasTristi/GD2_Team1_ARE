@@ -20,6 +20,17 @@ public class DetectPlayer : MonoBehaviour
         if (other.name.Equals("Player") && _rotatingPlatform.RotationStarts)
         {
             _cameraBehaviour.DoRotation = true;
+
+            if (IsCameraAlongX()) 
+            {
+                _cameraBehaviour.RotationPoint = new Vector3(transform.position.x, _cameraBehaviour.transform.position.y, _cameraBehaviour.transform.position.z);
+            }
+            else
+            {
+                _cameraBehaviour.RotationPoint = new Vector3(_cameraBehaviour.transform.position.x, _cameraBehaviour.transform.position.y, transform.position.z);
+            }
+            _cameraBehaviour.StartDir = _cameraBehaviour.RotationPoint - _cameraBehaviour.transform.position;
+
             if (_cameraBehaviour.RotationSpeed < 0 && _rotatingPlatform.RotationDirection > 0) 
             {
                 _cameraBehaviour.RotationSpeed *= -1; 
@@ -36,5 +47,11 @@ public class DetectPlayer : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         _player.transform.parent = null;
+    }
+
+
+    private bool IsCameraAlongX()
+    {
+        return _cameraBehaviour.transform.forward.Abs() == Vector3.right;
     }
 }
