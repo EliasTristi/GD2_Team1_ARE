@@ -46,13 +46,22 @@ public class CameraBehaviour : MonoBehaviour
 
     void Start()
     {
-        RotationPoint = gameObject.transform.position;
+
+      
        // rotationPoint.z = _playerPos.transform.position.z;
         StartDir = RotationPoint - transform.position;
        _camera = GetComponent<Camera>();
+
+
+
     }
     void Update()
     {
+
+
+
+
+
         if (!DoRotation)
         {
             if (Input.GetButtonDown("RotateCameraLeft"))
@@ -123,6 +132,30 @@ public class CameraBehaviour : MonoBehaviour
 
    bool _hasFreeMoved = false;
 
+    [SerializeField]
+    private List<Transform> _cameraPositions;
+
+    private Vector3 GetClosestCameraPos()
+    {
+        Vector3 closestPos = Vector3.zero;
+        float closestDistance = float.MaxValue;
+
+        foreach(var camPosTransform in _cameraPositions)
+        {
+           float distance = Vector3.Distance(transform.position, camPosTransform.position);
+
+           distance = MathF.Abs(distance);
+            print(distance);
+            if(distance < closestDistance)
+            closestDistance = distance;
+            closestPos = camPosTransform.position;
+        }
+
+
+        return closestPos;
+    }
+
+
     void Rotate()
     {
         Vector3 targetDir = RotationPoint - transform.position;
@@ -133,8 +166,21 @@ public class CameraBehaviour : MonoBehaviour
 
         if (currentAngle >= 90)
         {
-         
-            print(currentAngle);
+
+           // Vector3 closestPos = GetClosestCameraPos();
+           // transform.position.Set(closestPos.x, transform.position.y, closestPos.z);
+
+            //_endPos.y = transform.position.y;
+
+
+            //Vector3 pos = transform.rotation * closestPos;
+
+            //transform.position = pos;
+
+
+            // transform.position = _endPos;
+
+            //print(currentAngle);
 
             float deltaAngle = currentAngle - 90;
 
@@ -144,7 +190,9 @@ public class CameraBehaviour : MonoBehaviour
             if (RotationSpeed < 0)
                 transform.RotateAround(RotationPoint, new Vector3(0, 1, 0), deltaAngle);
 
-            // transform.position = _endPos;
+            //transform.position = _endPos;
+            // transform.forward = RotationPoint - transform.position;
+
 
             if (IsCameraAlongX())
             {
@@ -177,6 +225,15 @@ public class CameraBehaviour : MonoBehaviour
         }
         transform.RotateAround(RotationPoint, new Vector3(0, 1, 0), RotationSpeed * Time.deltaTime);
     }
+
+    void HandleRotationCancel()
+    {
+
+
+
+
+    }
+
 
     private void FixedUpdate()
     {
