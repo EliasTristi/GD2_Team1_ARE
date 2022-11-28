@@ -89,11 +89,11 @@ public class VinesClimbing : MonoBehaviour
         {
             if (IsCameraAlongX())
             {
-                transform.position = new Vector3(hit.transform.position.x + 0.2f, transform.position.y, transform.position.z);
+                _player.Move(new Vector3(hit.transform.position.x - transform.position.x, 0, 0));
             }
             if (IsCameraAlongZ())
             {
-                transform.position = new Vector3(transform.position.x, transform.position.y, hit.transform.position.z - 0.2f);
+                _player.Move(new Vector3(0, 0, hit.transform.position.z - transform.position.z));
             }
         }
     }

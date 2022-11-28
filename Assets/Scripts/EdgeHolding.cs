@@ -6,6 +6,8 @@ using UnityEngine;
 public class EdgeHolding : MonoBehaviour
 {
     [SerializeField]
+    private LayerMask _edgeMask;
+    [SerializeField]
     private LayerMask _platformMask;
 
     private CharacterController _player;
@@ -15,7 +17,7 @@ public class EdgeHolding : MonoBehaviour
     [SerializeField]
     private Transform _cameraTransform;
 
-    private bool _edgeFound = false;
+    private Transform _edgeFound;
     private bool _HangingOnEdge = false;
     private bool _climbing = false;
     private float _climbInitialHeight;
@@ -38,7 +40,7 @@ public class EdgeHolding : MonoBehaviour
                 EdgeMovement();
             }
 
-            if (_edgeFound && Input.GetKey(KeyCode.UpArrow))
+            if (_edgeFound != null && Input.GetKey(KeyCode.UpArrow))
             {
                 GrabEdge();
             }
@@ -58,13 +60,13 @@ public class EdgeHolding : MonoBehaviour
     {
         Ray ray = new Ray(transform.position - (_cameraTransform.forward * 100), _cameraTransform.forward);
 
-        if(Physics.Raycast(ray, out RaycastHit hit, 1000f, _platformMask) && hit.collider.isTrigger)
+        if(Physics.Raycast(ray, out RaycastHit hit, 1000f, _edgeMask) && hit.collider.isTrigger)
         {
-            _edgeFound = true;
+            _edgeFound = hit.transform;
         }
         else
         {
-            _edgeFound = false;
+            _edgeFound = null;
         }
     }
 
@@ -79,26 +81,6 @@ public class EdgeHolding : MonoBehaviour
         Vector3 currentPosition;
         int whileStopper = 0;
         int whileLimit = 100;
-        do
-        {
-            previousPosition = transform.position;
-            _player.Move(_cameraTransform.forward);
-            currentPosition = transform.position;
-
-            whileStopper++;
-
-            if (whileStopper >= whileLimit)
-            {
-                do
-                {
-                    _player.Move(-_cameraTransform.forward);
-                }
-                while ((!Physics.Raycast(transform.position + (_cameraTransform.forward * 2) - _cameraTransform.right, _cameraTransform.right, out RaycastHit hit, 3, _platformMask) || !hit.collider.isTrigger) && (!Physics.Raycast(transform.position + (_cameraTransform.forward * 2) + _cameraTransform.right, -_cameraTransform.right, out RaycastHit hit2, 3, _platformMask) || !hit2.collider.isTrigger));
-
-                break;
-            }
-        }
-        while (previousPosition.x != currentPosition.x && previousPosition.z != currentPosition.z);
     }
 
     private void EdgeMovement()
@@ -129,7 +111,7 @@ public class EdgeHolding : MonoBehaviour
             _playerMovement.Velocity = -Physics.gravity.normalized * Mathf.Sqrt(2 * Physics.gravity.magnitude * _edgeJumpHeight);
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow) || !_edgeFound)
+        if (Input.GetKeyDown(KeyCode.DownArrow) || _edgeFound == null)
         {
             _playerMovement.enabled = true;
             _HangingOnEdge = false;
@@ -146,9 +128,9 @@ public class EdgeHolding : MonoBehaviour
         }
         else
         {
-            if (Physics.Raycast(transform.position, _cameraTransform.forward + -Vector3.up, out RaycastHit hit1, 2, _platformMask) && !hit1.collider.isTrigger)
+            if (Physics.Raycast(transform.position - Vector3.up - (_cameraTransform.forward * 100), _cameraTransform.forward, out RaycastHit hit1, 1000, _platformMask) && !hit1.collider.isTrigger)
                 _player.Move(_cameraTransform.forward);
-            else if (Physics.Raycast(transform.position, _cameraTransform.right + -Vector3.up, out RaycastHit hit2, 2, _platformMask) && !hit2.collider.isTrigger)
+            else if (Physics.Raycast(transform.position - Vector3.up + _cameraTransform.right - (_cameraTransform.forward * 100), _cameraTransform.forward, out RaycastHit hit2, 1000, _platformMask) && !hit2.collider.isTrigger)
                 _player.Move(_cameraTransform.right);
             else
                 _player.Move(-_cameraTransform.right);
@@ -158,4 +140,6 @@ public class EdgeHolding : MonoBehaviour
             _vinesClimbing.enabled = true;
         }
     }
+    private bool IsCameraAlongX()
+        => _cameraTransform.forward.Abs() == Vector3.right;
 }
