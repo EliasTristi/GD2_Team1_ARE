@@ -80,8 +80,6 @@ public class CameraBehaviour : MonoBehaviour
                 if(RotationSpeed < 0)
                     RotationSpeed *= -1;
 
-                //CalculateEndPos();
-               // CalcEndPos();
             }
             else if (Input.GetButtonDown("RotateCameraRight"))
             {
@@ -108,8 +106,7 @@ public class CameraBehaviour : MonoBehaviour
                 DoRotation = true;
                 if (RotationSpeed > 0)
                     RotationSpeed *= -1;
-                //CalculateEndPos();
-               // CalcEndPos();
+ 
             }
 
         }
@@ -151,20 +148,32 @@ public class CameraBehaviour : MonoBehaviour
 
             if (IsCameraAlongX())
             {
-         
+                if(_hasFreeMoved)
+                {
+                    _hasFreeMoved = false;
+                    transform.position = new Vector3(transform.position.x, _playerPos.transform.position.y, transform.position.z);
+                }
+
+
                 StartDir = targetDir;
                 DoRotation = false; // this triggers the StopRotation event, so it must happen at the laxt step
                 return;
             }
             else if (IsCameraAlongZ())
             {
-              
+
+                if (_hasFreeMoved)
+                {
+                    _hasFreeMoved = false;
+                    transform.position = new Vector3(transform.position.x, _playerPos.transform.position.y, transform.position.z);
+                }
+
                 StartDir = targetDir;
                 DoRotation = false; // this triggers the StopRotation event, so it must happen at the laxt step
                 return;
             }
+            
 
-      
         }
         transform.RotateAround(RotationPoint, new Vector3(0, 1, 0), RotationSpeed * Time.deltaTime);
     }
@@ -187,7 +196,7 @@ public class CameraBehaviour : MonoBehaviour
             }
 
             //handlefreemovement uses camerafollow to snap back to the player center
-            if (!_hasFreeMoved) //allows it to instantly snap back after it goes out of bound
+            if (!_hasFreeMoved) //allows it to instantly snap back after it goes out of bound in func call before this
             {
                 HandleCameraFollow();
             }
